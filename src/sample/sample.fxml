@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<VBox fx:id="vBackground" alignment="center" prefHeight="198.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainController">
+    <HBox prefHeight="74.0" prefWidth="364.0" spacing="10">
+        <VBox spacing="5">
+            <Label text="List of objects"/>
+            <ComboBox fx:id="cbObjects" prefHeight="26.0" prefWidth="134.0" onAction="#getFields" >
+                <items>
+                    <FXCollections fx:factory="observableArrayList" >
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
+        <Button fx:id="btnCreateObject" onAction="#createNewWindow" prefHeight="26.0" prefWidth="132.0" text="create object" />
+        <Button onAction="#deleteObject" prefHeight="26.0" prefWidth="132.0" text="delete object" />
+    </HBox>
+    <HBox prefHeight="86.0" prefWidth="410.0" spacing="10">
+        <VBox spacing="5">
+            <Label text="List fields" />
+            <ComboBox fx:id="cbFields" onAction="#createEditComp" prefHeight="26.0" prefWidth="134.0" />
+        </VBox>
+        <VBox spacing="5" fx:id="vEditCont">
+
+        </VBox>
+    </HBox>
+    <stylesheets>
+        <URL value="@index.css" />
+    </stylesheets>
+</VBox>
