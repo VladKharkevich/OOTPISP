@@ -16,8 +16,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import serializers.SupportedFileFormats;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,11 +30,42 @@ public class MainController {
     public ComboBox<String> cbFields;
     public VBox vEditCont;
     public VBox vBackground;
+    public ComboBox cbTypeSer;
+    public VBox vSerializers;
     @FXML
     private Button btnCreateObject;
 
     @FXML
     public ComboBox<String> cbObjects;
+    @FXML
+    public static Stage mainStage;
+
+    @FXML protected void handleYourButtonAction(ActionEvent event) {
+        mainStage.close();
+    }
+
+    public void handleOnMouseClicked(MouseEvent mouseEvent) {
+        cbObjects.getItems().clear();
+        for (Object terminator : MainScreen.storage) {
+            Class termClass = terminator.getClass();
+            Field field = null;
+            try {
+                field = termClass.getField("model");
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            if(!field.isAccessible()){
+                field.setAccessible(true);
+            }
+            try {
+                Object value = field.get(terminator);;
+                String name = termClass.getName();
+                cbObjects.getItems().add(name.substring(name.lastIndexOf('.') + 1) + " (" + value.toString() + " )");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @FXML
     public void createNewWindow(ActionEvent actionEvent) {
@@ -44,30 +77,6 @@ public class MainController {
             stage.setTitle("second window");
             stage.setScene(new Scene(root1));
             stage.show();
-            cbObjects.setOnMouseClicked(new EventHandler <MouseEvent>() {
-                public void handle(MouseEvent event) {
-                    cbObjects.getItems().clear();
-                    for (Object terminator : MainScreen.storage) {
-                        Class termClass = terminator.getClass();
-                        Field field = null;
-                        try {
-                            field = termClass.getField("model");
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace();
-                        }
-                        if(!field.isAccessible()){
-                            field.setAccessible(true);
-                        }
-                        try {
-                            Object value = field.get(terminator);;
-                            String name = termClass.getName();
-                            cbObjects.getItems().add(name.substring(name.lastIndexOf('.') + 1) + " (" + value.toString() + " )");
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -252,4 +261,56 @@ public class MainController {
             vEditCont.getChildren().add(tempLabel);
         }
     }
+
+    public void serialize(ActionEvent actionEvent) {
+        if (vSerializers.getChildren().get(vSerializers.getChildren().size() - 1) instanceof Label){
+            vSerializers.getChildren().remove(vSerializers.getChildren().size() - 1);
+        }
+        try {
+            String format = SupportedFileFormats.values()[cbTypeSer.getSelectionModel().getSelectedIndex()].name();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Serialize to");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter(cbTypeSer.getValue() + " Files", "*." + format));
+            String fileName = fileChooser.showOpenDialog(mainStage).getName();
+            Class cls = Class.forName("serializers." + cbTypeSer.getValue());
+            Method method = cls.getMethod("serialize", String.class);
+            method.invoke(cls, fileName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Label errorLabel = new Label("Error! Serializer doesn't found");
+            errorLabel.setPadding(new Insets(17, 10, 5, 12));
+            errorLabel.setTextFill(Color.web("#ff2400"));
+            vSerializers.getChildren().add(errorLabel);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deserialize(ActionEvent actionEvent) {
+        if (vSerializers.getChildren().get(vSerializers.getChildren().size() - 1) instanceof Label){
+            vSerializers.getChildren().remove(vSerializers.getChildren().size() - 1);
+        }
+        try {
+            String format = SupportedFileFormats.values()[cbTypeSer.getSelectionModel().getSelectedIndex()].name();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Deserialize to");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter(cbTypeSer.getValue() + " Files", "*." + format));
+            String fileName = fileChooser.showOpenDialog(mainStage).getName();
+            Class cls = Class.forName("serializers." + cbTypeSer.getValue());
+            Method method = cls.getMethod("deserialize", String.class);
+            method.invoke(cls, fileName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Label errorLabel = new Label("Error! Deserializer doesn't found");
+            errorLabel.setPadding(new Insets(17, 10, 5, 12));
+            errorLabel.setTextFill(Color.web("#ff2400"));
+            vSerializers.getChildren().add(errorLabel);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

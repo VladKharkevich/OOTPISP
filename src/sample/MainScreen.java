@@ -18,8 +18,8 @@ public class MainScreen extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
-        Scene scene = new Scene(root, 500, 375);
-
+        Scene scene = new Scene(root, 700, 475);
+        MainController.mainStage = stage;
         stage.setTitle("CRUD editor :)");
         stage.setScene(scene);
         stage.show();

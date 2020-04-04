@@ -39,6 +39,7 @@ public class Controller {
             vContainer.getChildren().removeAll(vContainer.getChildren());
 
             for (Field field : fields) {
+                System.out.println(field);
                 if (!Modifier.toString(field.getModifiers()).contains("final")) {
                     dictionary.put(field.getName(), "");
                     String inputName = field.toString();
@@ -99,7 +100,10 @@ public class Controller {
                         Constructor<?>[] constructors = terminatorClass.getConstructors();
                         Object terminator = null;
                         try {
-                            terminator = constructors[0].newInstance(dictionary);
+                            if (constructors[0].getParameterCount() > 0)
+                                terminator = constructors[0].newInstance(dictionary);
+                            else
+                                terminator = constructors[1].newInstance(dictionary);
                             MainScreen.storage.add(terminator);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
                             ex.printStackTrace();

@@ -1,5 +1,7 @@
 package Terminators;
 
-public enum TypeSource {
+import java.io.Serializable;
+
+public enum TypeSource implements Serializable {
     NUCLEAR, HYDROGEN
 }

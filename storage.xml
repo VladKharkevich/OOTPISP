@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="11.0.5" class="java.beans.XMLDecoder">
+ <object class="Terminators.T600" id="T6000">
+  <void class="Terminators.Humanoid" method="getField">
+   <string>weapon</string>
+   <void method="set">
+    <object idref="T6000"/>
+    <object class="java.lang.Enum" id="Weapon0" method="valueOf">
+     <class>Terminators.Weapon</class>
+     <string>SHOTGUN</string>
+    </object>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>aim</string>
+   <void method="set">
+    <object idref="T6000"/>
+    <string>sadf</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="T6000"/>
+    <int>124</int>
+   </void>
+  </void>
+ </object>
+ <object class="Terminators.Battery" id="Battery0">
+  <void class="Terminators.Battery" method="getField">
+   <string>typeSource</string>
+   <void method="set">
+    <object idref="Battery0"/>
+    <object class="java.lang.Enum" id="TypeSource0" method="valueOf">
+     <class>Terminators.TypeSource</class>
+     <string>NUCLEAR</string>
+    </object>
+   </void>
+  </void>
+  <void class="Terminators.Battery" method="getField">
+   <string>lifeTime</string>
+   <void method="set">
+    <object idref="Battery0"/>
+    <int>214</int>
+   </void>
+  </void>
+  <void class="Terminators.Battery" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="Battery0"/>
+    <int>241</int>
+   </void>
+  </void>
+ </object>
+ <object class="Terminators.Battery" id="Battery1">
+  <void class="Terminators.Battery" method="getField">
+   <string>typeSource</string>
+   <void method="set">
+    <object idref="Battery1"/>
+    <object idref="TypeSource0"/>
+   </void>
+  </void>
+  <void class="Terminators.Battery" method="getField">
+   <string>lifeTime</string>
+   <void method="set">
+    <object idref="Battery1"/>
+    <int>2142</int>
+   </void>
+  </void>
+  <void class="Terminators.Battery" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="Battery1"/>
+    <int>2412</int>
+   </void>
+  </void>
+ </object>
+ <object class="Terminators.T800" id="T8000">
+  <void class="Terminators.T800" method="getField">
+   <string>battery</string>
+   <void method="set">
+    <object idref="T8000"/>
+    <object class="Terminators.Battery" id="Battery2">
+     <void class="Terminators.Battery" method="getField">
+      <string>typeSource</string>
+      <void method="set">
+       <object idref="Battery2"/>
+       <object idref="TypeSource0"/>
+      </void>
+     </void>
+     <void class="Terminators.Battery" method="getField">
+      <string>lifeTime</string>
+      <void method="set">
+       <object idref="Battery2"/>
+       <int>421</int>
+      </void>
+     </void>
+     <void class="Terminators.Battery" method="getField">
+      <string>model</string>
+      <void method="set">
+       <object idref="Battery2"/>
+       <int>214</int>
+      </void>
+     </void>
+    </object>
+   </void>
+  </void>
+  <void class="Terminators.Humanoid" method="getField">
+   <string>weapon</string>
+   <void method="set">
+    <object idref="T8000"/>
+    <object idref="Weapon0"/>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>aim</string>
+   <void method="set">
+    <object idref="T8000"/>
+    <string>adfs</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="T8000"/>
+    <int>124241</int>
+   </void>
+  </void>
+ </object>
+ <object class="Terminators.Rev9" id="Rev90">
+  <void class="Terminators.Assassin" method="getField">
+   <string>currentHuman</string>
+   <void method="set">
+    <object idref="Rev90"/>
+    <string>fsda</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>aim</string>
+   <void method="set">
+    <object idref="Rev90"/>
+    <string>fewq</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="Rev90"/>
+    <int>421</int>
+   </void>
+  </void>
+ </object>
+ <object idref="Battery2"/>
+</java>

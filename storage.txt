@@ -1,0 +1,6 @@
+{Terminators.T600@0,"aim":sadf,"model":124,"weapon":SHOTGUN,"height":2.4,"weight":320,"producer":Skynet,"camouflage":rubber}
+{Terminators.Battery@1,"typeSource":NUCLEAR,"lifeTime":214,"model":241}
+{Terminators.Battery@2,"typeSource":NUCLEAR,"lifeTime":2142,"model":2412}
+{Terminators.T800@3,"aim":adfs,"model":124241,"weapon":SHOTGUN,"Height":1.9,"Weight":200,"Producer":Skynet,"Camouflage":rubber,"battery":Terminators.Battery@5}
+{Terminators.Rev9@4,"aim":fewq,"model":421,"currentHuman":fsda,"producer":Legion}
+{Terminators.Battery@5,"typeSource":NUCLEAR,"lifeTime":421,"model":214}

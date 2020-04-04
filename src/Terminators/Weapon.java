@@ -1,6 +1,8 @@
 package Terminators;
 
-public enum Weapon {
+import java.io.Serializable;
+
+public enum Weapon implements Serializable {
     MINIGUN,
     SHOTGUN,
     UZI,
