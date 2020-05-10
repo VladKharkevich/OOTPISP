@@ -4,14 +4,21 @@ import sample.MainScreen;
 
 import java.io.*;
 
+import static pluginUtils.PluginUtils.*;
+
 public class Binary implements Serializable{
 
-    public static void serialize(String filename){
+    static final byte[] attribute = {-84, -19};
+
+    public static void serialize(String filename, Class plugCls){
+        String tempFilename = filename;
+        if (plugCls != null) {
+            filename = "temp";
+        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(filename);
         } catch (FileNotFoundException e) {
-            File dir1 = new File(filename);
             e.printStackTrace();
         }
         ObjectOutputStream oos = null;
@@ -24,10 +31,17 @@ public class Binary implements Serializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (plugCls != null){
+            plugSerialize(tempFilename, plugCls);
+        }
     }
 
-    public static void deserialize(String filename){
-        System.out.println(filename);
+    public static void deserialize(String filename) {
+        String plug = checkPlugin(filename, attribute);
+        if (plug != null){
+            plugDeserialize(filename, plug);
+            filename = "temp";
+        }
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(filename);
@@ -40,8 +54,13 @@ public class Binary implements Serializable{
             oin = new ObjectInputStream(fis);
             while (true)
                 MainScreen.storage.add(oin.readObject());
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        if (plug != null){
+            File temp = new File("temp");
+            temp.delete();
+        }
     }
+
 }

@@ -12,9 +12,17 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static pluginUtils.PluginUtils.*;
+
 public class Text {
 
-    public static void serialize(String filename){
+    static final String attribute = "{";
+
+    public static void serialize(String filename, Class plugCls){
+        String tempFilename = filename;
+        if (plugCls != null) {
+            filename = "temp";
+        }
         try {
             FileOutputStream fos = null;
             try {
@@ -66,6 +74,9 @@ public class Text {
         } catch (IOException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        if (plugCls != null){
+            plugSerialize(tempFilename, plugCls);
+        }
     }
 
     private static ArrayList<Field> getObjectFields(Class cls){
@@ -79,6 +90,11 @@ public class Text {
     }
 
     public static void deserialize(String filename){
+        String plug = checkPlugin(filename, attribute);
+        if (plug != null){
+            plugDeserialize(filename, plug);
+            filename = "temp";
+        }
         try {
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(filename);
@@ -160,6 +176,10 @@ public class Text {
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        if (plug != null){
+            File temp = new File("temp");
+            temp.delete();
         }
     }
 

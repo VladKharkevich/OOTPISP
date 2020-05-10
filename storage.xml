@@ -151,4 +151,27 @@
   </void>
  </object>
  <object idref="Battery2"/>
+ <object class="Terminators.Rev7" id="Rev70">
+  <void class="Terminators.LiquidTerminator" method="getField">
+   <string>coldWeapon</string>
+   <void method="set">
+    <object idref="Rev70"/>
+    <string>dsfa</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>aim</string>
+   <void method="set">
+    <object idref="Rev70"/>
+    <string>dsaf</string>
+   </void>
+  </void>
+  <void class="Terminators.Terminator" method="getField">
+   <string>model</string>
+   <void method="set">
+    <object idref="Rev70"/>
+    <int>1</int>
+   </void>
+  </void>
+ </object>
 </java>

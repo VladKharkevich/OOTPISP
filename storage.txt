@@ -4,3 +4,4 @@
 {Terminators.T800@3,"aim":adfs,"model":124241,"weapon":SHOTGUN,"Height":1.9,"Weight":200,"Producer":Skynet,"Camouflage":rubber,"battery":Terminators.Battery@5}
 {Terminators.Rev9@4,"aim":fewq,"model":421,"currentHuman":fsda,"producer":Legion}
 {Terminators.Battery@5,"typeSource":NUCLEAR,"lifeTime":421,"model":214}
+{Terminators.Rev7@6,"aim":dsaf,"model":1,"coldWeapon":dsfa,"producer":Legion,"material":carbon fiber}

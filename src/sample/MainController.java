@@ -19,11 +19,21 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import pluginUtils.PlugLoader;
 import serializers.SupportedFileFormats;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import static pluginUtils.PluginUtils.getClassFromPlugins;
 
 public class MainController {
     @FXML
@@ -32,6 +42,8 @@ public class MainController {
     public VBox vBackground;
     public ComboBox cbTypeSer;
     public VBox vSerializers;
+    public ComboBox cbTypePlug;
+    public VBox vPlugins;
     @FXML
     private Button btnCreateObject;
 
@@ -58,7 +70,7 @@ public class MainController {
                 field.setAccessible(true);
             }
             try {
-                Object value = field.get(terminator);;
+                Object value = field.get(terminator);
                 String name = termClass.getName();
                 cbObjects.getItems().add(name.substring(name.lastIndexOf('.') + 1) + " (" + value.toString() + " )");
             } catch (IllegalAccessException e) {
@@ -210,7 +222,6 @@ public class MainController {
                                     int counter = 0;
                                     int i = 0;
                                     while ((counter <= index) && (i < MainScreen.storage.size())){
-                                        System.out.println(MainScreen.storage.get(i).getClass().getName());
                                         if (MainScreen.storage.get(i).getClass().getName().equals("Terminators." + text.substring(0, text.indexOf(' ')))){
                                             counter ++;
                                         }
@@ -267,6 +278,22 @@ public class MainController {
             vSerializers.getChildren().remove(vSerializers.getChildren().size() - 1);
         }
         try {
+            Method plugMethod = null;
+            Class plugCls = null;
+            if (cbTypePlug.getValue() != null) {
+                if (!checkPlugin((String) cbTypePlug.getValue()))
+                    throw new FileNotFoundException();
+                else {
+                    plugCls = getClassFromPlugins((String) cbTypePlug.getValue());
+                    if (plugCls == null){
+                        String clsName = cbTypePlug.getValue() + "Plugin";
+                        plugCls = getClassFromPlugins(clsName);
+                        if (plugCls == null)
+                            throw new FileNotFoundException();
+                    }
+
+                }
+            }
             String format = SupportedFileFormats.values()[cbTypeSer.getSelectionModel().getSelectedIndex()].name();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Serialize to");
@@ -274,8 +301,8 @@ public class MainController {
                     new FileChooser.ExtensionFilter(cbTypeSer.getValue() + " Files", "*." + format));
             String fileName = fileChooser.showOpenDialog(mainStage).getName();
             Class cls = Class.forName("serializers." + cbTypeSer.getValue());
-            Method method = cls.getMethod("serialize", String.class);
-            method.invoke(cls, fileName);
+            Method method = cls.getMethod("serialize", String.class, Class.class);
+            method.invoke(cls, fileName, plugCls);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             Label errorLabel = new Label("Error! Serializer doesn't found");
@@ -284,7 +311,49 @@ public class MainController {
             vSerializers.getChildren().add(errorLabel);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            Label errorLabel = new Label("Error! Plugin doesn't found");
+            errorLabel.setPadding(new Insets(17, 10, 5, 12));
+            errorLabel.setTextFill(Color.web("#ff2400"));
+            vPlugins.getChildren().add(errorLabel);
         }
+    }
+
+    private boolean checkPlugin(String value) {
+        File pluginDir = new File("plugins");
+        File[] jars = pluginDir.listFiles(new FileFilter() {
+            public boolean accept(File file) {
+                return file.isFile() && file.getName().endsWith(".jar");
+            }
+        });
+        for (File f : jars) {
+            try {
+                JarFile jarFile = new JarFile(f);
+                Enumeration<JarEntry> entries = jarFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    String name = entry.getName();
+                    String ext = "";
+                    int index = name.lastIndexOf('.') + 1;
+                    if (index > 0) {
+                        String extension = name.substring(index);
+                        ext = extension;
+                    }
+                    if (ext.equals("class")) {
+                        String className = name.substring(0, name.length() - 6);
+                        if (className.contains(value))
+                            return true;
+                    }
+                }
+                jarFile.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     public void deserialize(ActionEvent actionEvent) {
@@ -310,7 +379,38 @@ public class MainController {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+        System.out.println(MainScreen.storage);
     }
 
 
+    public void handleDownloadPlugins(MouseEvent mouseEvent) {
+        cbTypePlug.getItems().clear();
+        if (vPlugins.getChildren().size() == 3){
+            vPlugins.getChildren().remove(2);
+        }
+        PlugLoader pluginLoader = new PlugLoader();
+        ArrayList<Class> plugins = pluginLoader.getPlugins();
+        for (Class plugin : plugins) {
+            String plugName = plugin.getName();
+            if (plugName.endsWith("Plugin")){
+                plugName = plugName.substring(0, plugName.length()-6);
+            }
+            cbTypePlug.getItems().add(plugName);
+        }
+    }
+
+    private List<String> getClassNames(String path){
+        List<String> classNames = new ArrayList<>();
+        File dir = new File(path);
+        File[] arrFiles = dir.listFiles();
+        for (File file: arrFiles){
+            String filename = file.getName();
+            if (filename.contains("Plugin.java")){
+                int index = filename.lastIndexOf("Plugin.java");
+                if (index != 0)
+                    classNames.add(filename.substring(0, index));
+            }
+        }
+        return classNames;
+    }
 }

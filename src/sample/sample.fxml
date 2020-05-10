@@ -20,6 +20,7 @@
         <Button fx:id="btnCreateObject" onAction="#createNewWindow" prefHeight="26.0" prefWidth="132.0" text="create object" />
         <Button onAction="#deleteObject" prefHeight="26.0" prefWidth="132.0" text="delete object" />
         <VBox fx:id="vSerializers" spacing="5">
+            <Label text="Serializers" />
             <ComboBox fx:id="cbTypeSer" prefHeight="26.0" prefWidth="134.0" >
                 <items>
                     <FXCollections fx:factory="observableArrayList">
@@ -31,6 +32,15 @@
             </ComboBox>
             <Button fx:id="btnSaveObjects" onAction="#serialize" prefHeight="26.0" prefWidth="132.0" text="save objects" />
             <Button fx:id="btnDownloadObjects" onAction="#deserialize" prefHeight="26.0" prefWidth="132.0" text="download objects" />
+        </VBox>
+        <VBox fx:id="vPlugins" spacing="5">
+            <Label text="Plugins" />
+            <ComboBox fx:id="cbTypePlug" prefHeight="26.0" prefWidth="134.0" onMouseClicked="#handleDownloadPlugins">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                    </FXCollections>
+                </items>
+            </ComboBox>
         </VBox>
     </HBox>
     <HBox prefHeight="86.0" prefWidth="410.0" spacing="10">
